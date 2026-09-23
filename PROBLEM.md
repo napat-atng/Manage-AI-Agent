@@ -32,6 +32,10 @@ phase and pulled only after Docker/Ollama is available.
 **Approved default:** `qwen2.5:3b`. It is practical for local development on a GTX 1650
 Ti-class laptop GPU while retaining a CPU fallback. GPU use will remain optional.
 
+## Update — Model pulled and LiteLLM health verified
+- Ollama model `qwen2.5:3b` pulled successfully.
+- LiteLLM health endpoint returns "I'm alive!".
+
 ## Note — Git repository
 
 `D:\Manage AI Agent` is connected to the GitHub repository
