@@ -22,10 +22,7 @@ PowerShell use should be `pnpm.cmd` after restarting the terminal, or `corepack 
 
 ## Blocker 2 — Docker Compose is not installed
 
-Phase 02 and later require Docker Compose to run PostgreSQL, Redis, LiteLLM, and Ollama.
-`docker compose version` currently fails because Docker is unavailable.
-
-**Needed:** Docker Compose `v5.5.1` installed and made available to this workspace.
+**Resolved — 2026-09-23.** Docker Desktop 4.91.0 and Docker Compose `v5.5.1` are active and running with the WSL2 Linux engine. `docker compose version` and `docker ps` run successfully. Local infrastructure containers can now be launched and verified.
 
 ## Decision 3 — Default Ollama model
 

@@ -1,0 +1,98 @@
+services:
+  postgres:
+    image: postgres:16-alpine
+    container_name: aacc-postgres
+    restart: unless-stopped
+    ports:
+      - '${POSTGRES_PORT:-5432}:5432'
+    environment:
+      POSTGRES_DB: ${POSTGRES_DB:-aacc}
+      POSTGRES_USER: ${POSTGRES_USER:-aacc}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-aacc_dev_password}
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+      - ./infra/postgres/init:/docker-entrypoint-initdb.d:ro
+    healthcheck:
+      test: ['CMD-SHELL', 'pg_isready -U $${POSTGRES_USER:-aacc} -d $${POSTGRES_DB:-aacc}']
+      interval: 5s
+      timeout: 5s
+      retries: 5
+    networks:
+      - aacc-network
+
+  redis:
+    image: redis:7-alpine
+    container_name: aacc-redis
+    restart: unless-stopped
+    ports:
+      - '${REDIS_PORT:-6379}:6379'
+    volumes:
+      - redis_data:/data
+    healthcheck:
+      test: ['CMD', 'redis-cli', 'ping']
+      interval: 5s
+      timeout: 5s
+      retries: 5
+    networks:
+      - aacc-network
+
+  ollama:
+    image: ollama/ollama:latest
+    container_name: aacc-ollama
+    restart: unless-stopped
+    ports:
+      - '${OLLAMA_PORT:-11434}:11434'
+    volumes:
+      - ollama_data:/root/.ollama
+    healthcheck:
+      test: ['CMD-SHELL', 'ollama list > /dev/null 2>&1 || exit 1']
+      interval: 5s
+      timeout: 5s
+      retries: 5
+    networks:
+      - aacc-network
+
+  litellm:
+    image: ghcr.io/berriai/litellm:main-latest
+    container_name: aacc-litellm
+    restart: unless-stopped
+    ports:
+      - '${LITELLM_PORT:-4000}:4000'
+    volumes:
+      - ./infra/litellm/config.yaml:/app/config.yaml:ro
+    environment:
+      LITELLM_MASTER_KEY: ${LITELLM_MASTER_KEY:-sk-local-dev-key}
+      OLLAMA_BASE_URL: http://ollama:11434
+      OLLAMA_MODEL: ${OLLAMA_MODEL:-qwen2.5:3b}
+    command:
+      - '--config'
+      - '/app/config.yaml'
+      - '--port'
+      - '4000'
+    depends_on:
+      ollama:
+        condition: service_healthy
+    healthcheck:
+      test:
+        [
+          'CMD-SHELL',
+          'python3 -c "import urllib.request; urllib.request.urlopen(''http://localhost:4000/health/liveliness'')" || exit 1',
+        ]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    networks:
+      - aacc-network
+
+volumes:
+  postgres_data:
+    name: aacc_postgres_data
+  redis_data:
+    name: aacc_redis_data
+  ollama_data:
+    name: aacc_ollama_data
+
+networks:
+  aacc-network:
+    name: aacc-network
+    driver: bridge
