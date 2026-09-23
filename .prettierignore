@@ -1,0 +1,6 @@
+ai-agent-control-center-v1-playbook/
+node_modules/
+dist/
+.next/
+coverage/
+apps/web/next-env.d.ts

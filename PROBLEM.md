@@ -14,10 +14,11 @@ Created: 2026-09-23
 
 ## Blocker 1 — pnpm is not installed
 
-Phase 01 requires pnpm to install workspace dependencies and run build, typecheck, lint,
-and test commands. `pnpm --version` currently fails because the command is unavailable.
+**Resolved for repository commands — 2026-09-23.** pnpm `12.5.1` is installed through
+Corepack and the repository invokes it through `corepack pnpm`.
 
-**Needed:** pnpm `12.5.1` installed and made available on PATH.
+PowerShell execution policy prevents the user-level `pnpm.ps1` shim from running, so direct
+PowerShell use should be `pnpm.cmd` after restarting the terminal, or `corepack pnpm`.
 
 ## Blocker 2 — Docker Compose is not installed
 
