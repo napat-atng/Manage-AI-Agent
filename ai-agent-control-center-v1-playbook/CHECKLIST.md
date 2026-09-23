@@ -7,7 +7,7 @@
 | [x] 0 | [00-project-rules.md](00-project-rules.md) | - | architecture, conventions, ADR baseline อนุมัติ |
 | [x] 1 | [01-monorepo.md](01-monorepo.md) | 0 | apps/packages build และ typecheck ได้ |
 | [x] 2 | [02-infrastructure.md](02-infrastructure.md) | 1 | Postgres, Redis, LiteLLM, Ollama พร้อม health checks |
-| [ ] 3 | [03-database.md](03-database.md) | 1,2 | Sequelize migrations และ core tables ครบ |
+| [x] 3 | [03-database.md](03-database.md) | 1,2 | Sequelize migrations และ core tables ครบ |
 | [ ] 4 | [04-contracts.md](04-contracts.md) | 1,3 | Zod contracts, shared IDs และ error envelope พร้อม |
 | [ ] 5 | [05-llm-gateway.md](05-llm-gateway.md) | 2,3,4 | LiteLLM routing + ModelGateway ใช้ Ollama ได้ |
 | [ ] 6 | [06-agent-core.md](06-agent-core.md) | 3,4,5 | agent/version/tool binding และ manager/researcher/coder/reviewer |
