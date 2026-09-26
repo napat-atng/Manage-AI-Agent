@@ -18,3 +18,5 @@
 
 5. **Code Quality & Consistency**:
    - Follow strict TypeScript, Zod at boundaries, UUID primary keys, snake_case database schema, camelCase TypeScript properties, and UTC timestamps.
+
+
