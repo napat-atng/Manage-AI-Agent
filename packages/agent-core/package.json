@@ -13,6 +13,15 @@
     "build": "tsc -p tsconfig.json",
     "typecheck": "tsc --noEmit -p tsconfig.json",
     "lint": "eslint src",
-    "test": "node --test"
+    "test": "vitest run"
+  },
+  "dependencies": {
+    "@aacc/contracts": "workspace:*",
+    "@aacc/llm": "workspace:*",
+    "zod": "^4.6.5"
+  },
+  "devDependencies": {
+    "tsx": "^4.23.15",
+    "vitest": "^5.0.2"
   }
 }
