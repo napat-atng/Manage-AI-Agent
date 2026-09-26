@@ -76,6 +76,23 @@ export class AgentExecutor {
           : undefined,
       });
 
+      // --- Tool Binding Enforcement ---
+      // In a real scenario, 'completion' would contain tool_calls.
+      // For now, we simulate checking if the LLM requested a tool (represented as structured content here)
+      // or if the gateway were to return a list of requested tools.
+      // Since LiteLLMGateway.complete currently only returns content string,
+      // we implement the check against the content if it contains a tool call pattern,
+      // or prepare for when the gateway is updated to return explicit tool calls.
+
+      // Simulation of tool call detection from completion.content
+      // (assuming a format like 'CALL: tool_name')
+      if (completion.content.startsWith('CALL: ')) {
+        const toolName = completion.content.replace('CALL: ', '').trim();
+        if (!this.isToolAllowed(snapshot, toolName)) {
+          throw new Error(`Tool binding violation: tool '${toolName}' is not allowed for this agent version.`);
+        }
+      }
+
       const latencyMs = Date.now() - startMs;
 
       // --- Persist run completion ---

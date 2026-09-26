@@ -165,4 +165,32 @@ describe('AgentExecutor', () => {
       error: 'Gateway timeout',
     });
   });
+
+  it('should enforce tool binding: block calls to disallowed tools', async () => {
+    // Mock a response that attempts to call a disallowed tool
+    mockGateway.complete.mockResolvedValue({
+      content: 'CALL: disallowed_tool',
+      model: 'gpt-4',
+      provider: 'openai',
+      usage: {
+        promptTokens: 100,
+        completionTokens: 50,
+        totalTokens: 150,
+      },
+    });
+
+    await expect(executor.run(mockSnapshot, mockCtx, mockInput)).rejects.toThrow(
+      "Tool binding violation: tool 'disallowed_tool' is not allowed for this agent version."
+    );
+
+    // Verify it was persisted as failed
+    const runId = mockRepository.create.mock.calls[0][0].id;
+    expect(mockRepository.updateStatus).toHaveBeenCalledWith(
+      runId,
+      'failed',
+      expect.objectContaining({
+        error: expect.stringContaining('Tool binding violation'),
+      })
+    );
+  });
 });
