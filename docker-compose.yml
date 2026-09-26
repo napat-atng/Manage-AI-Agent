@@ -55,12 +55,9 @@ services:
       - ./infra/litellm/config.yaml:/app/config.yaml
     command: [ "--config", "/app/config.yaml", "--port", "4000" ]
     depends_on:
-      postgres:
-        condition: service_healthy
-      redis:
-        condition: service_healthy
-      ollama:
-        condition: service_healthy
+      - postgres
+      - redis
+      - ollama
     healthcheck:
       test: ["CMD-SHELL", "curl -f http://localhost:4000/health/readiness || exit 1"]
       interval: 30s
@@ -69,4 +66,4 @@ services:
 
 volumes:
   postgres_data:
-  ollama_data
+  ollama_data:
