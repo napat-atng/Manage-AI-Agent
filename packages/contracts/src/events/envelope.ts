@@ -1,16 +1,21 @@
-// src/events/envelope.ts
+
 import { z } from "zod";
-import { RequestIdSchema, IsoUtcDateTimeSchema } from "../primitives.js";
+import { UUIDSchema, TimestampSchema } from "../api/envelope";
 
 export const EventEnvelopeSchema = z.object({
-  id: z.string().uuid(),
-  taskId: RequestIdSchema,
+  id: UUIDSchema,
+  taskId: UUIDSchema,
   sequence: z.number().int().nonnegative(),
   type: z.string(),
-  occurredAt: IsoUtcDateTimeSchema,
-  correlationId: RequestIdSchema.optional(),
-  version: z.number().int().positive().default(1),
-  payload: z.any()
+  payload: z.record(z.any()),
+  occurredAt: TimestampSchema,
+  correlationId: UUIDSchema.optional(),
+  eventVersion: z.number().int().default(1),
 });
 
 export type EventEnvelope = z.infer<typeof EventEnvelopeSchema>;
+
+export interface EventPublisher {
+  publish(event: EventEnvelope): Promise<void>;
+}
+

@@ -37,3 +37,4 @@
 - [ ] ทุก external boundary validate ด้วย Zod; ทุก event มี immutable sequence; logs ไม่มี secret.
 - [ ] Test, lint, typecheck และ E2E ผ่านใน clean clone ตาม README ของ repo ที่สร้าง.
 
+
