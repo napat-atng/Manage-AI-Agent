@@ -6,12 +6,16 @@ import realtimeRouter from \./routes/realtime\;
 import authRouter from \./auth/auth.routes\;
 import { requireUser } from \./auth/auth.middleware\;
 import { errorHandler } from \./middleware/error\;
+import { rateLimit } from \./security/rate-limit\;
 
 const app = express();
 const logger = pino({ name: \@aacc/api\ });
 const port = Number(process.env.API_PORT ?? 3001);
 
 app.use(express.json());
+
+// Global Rate Limit for API
+app.use(rateLimit(100, 60 * 1000));
 
 app.get(\/health\, (_request, response) => response.status(200).json({ status: \ok\ }));
 
@@ -27,4 +31,4 @@ app.use(\/api/v1\, realtimeRouter);
 // Error Handling
 app.use(errorHandler);
 
-app.listen(port, () => logger.info({ port }, \API v1 listening with Auth\));
+app.listen(port, () => logger.info({ port }, \API v1 listening with Security Sandbox\));
