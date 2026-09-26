@@ -18,6 +18,7 @@
   "dependencies": {
     "@aacc/contracts": "workspace:*",
     "@aacc/llm": "workspace:*",
+    "@aacc/db": "workspace:*",
     "zod": "^4.6.5"
   },
   "devDependencies": {

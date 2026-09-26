@@ -1,4 +1,5 @@
 import type { QueryInterface } from 'sequelize';
+import { INITIAL_AGENT_VERSION_SNAPSHOTS } from '@manage-ai/agent-core';
 
 export async function up({ context: queryInterface }: { context: QueryInterface }): Promise<void> {
   const now = new Date();
@@ -74,52 +75,16 @@ export async function up({ context: queryInterface }: { context: QueryInterface 
   ]);
 
   // 4. Initial agent versions
-  await queryInterface.bulkInsert('agent_versions', [
-    {
-      id: '40000000-0000-0000-0000-000000000001',
-      agent_id: managerId,
-      version: 1,
-      system_prompt:
-        'You are the Manager agent. You break down complex goals into steps and orchestrate workers.',
-      model_profile_id: modelProfileId,
-      config: JSON.stringify({ max_turns: 20 }),
-      created_at: now,
-      updated_at: now,
-    },
-    {
-      id: '40000000-0000-0000-0000-000000000002',
-      agent_id: researcherId,
-      version: 1,
-      system_prompt:
-        'You are the Researcher agent. You analyze documents, query information, and synthesize research findings.',
-      model_profile_id: modelProfileId,
-      config: JSON.stringify({ max_turns: 10 }),
-      created_at: now,
-      updated_at: now,
-    },
-    {
-      id: '40000000-0000-0000-0000-000000000003',
-      agent_id: coderId,
-      version: 1,
-      system_prompt:
-        'You are the Coder agent. You implement features, fix bugs, and adhere to architecture rules.',
-      model_profile_id: modelProfileId,
-      config: JSON.stringify({ max_turns: 30 }),
-      created_at: now,
-      updated_at: now,
-    },
-    {
-      id: '40000000-0000-0000-0000-000000000004',
-      agent_id: reviewerId,
-      version: 1,
-      system_prompt:
-        'You are the Reviewer agent. You audit code quality, verify test outcomes, and validate acceptance criteria.',
-      model_profile_id: modelProfileId,
-      config: JSON.stringify({ max_turns: 10 }),
-      created_at: now,
-      updated_at: now,
-    },
-  ]);
+  await queryInterface.bulkInsert('agent_versions', INITIAL_AGENT_VERSION_SNAPSHOTS.map(s => ({
+    id: s.id,
+    agent_id: s.agentId,
+    version: s.version,
+    system_prompt: s.systemPrompt,
+    model_profile_id: s.modelProfileId,
+    config: JSON.stringify(s.config),
+    created_at: now,
+    updated_at: now,
+  })));
 
   // 5. Initial tools
   await queryInterface.bulkInsert('tools', [
@@ -150,7 +115,7 @@ export async function up({ context: queryInterface }: { context: QueryInterface 
       updated_at: now,
     },
     {
-      id: '50000000-0000-0000-0000-000000000003',
+      id: '50000000-0000-0000-0000-0000000000003',
       name: 'command_exec',
       description: 'Execute approved shell commands within the project workspace',
       schema: JSON.stringify({
