@@ -8,7 +8,7 @@ export const ToolDescriptorSchema = z.object({
   id: z.string().uuid(),
   name: z.string(),
   description: z.string().optional(),
-  inputSchema: z.record(z.any()),
+  inputSchema: z.record(z.any()).default({}),
 });
 export type ToolDescriptor = z.infer<typeof ToolDescriptorSchema>;
 
@@ -23,7 +23,7 @@ export const AgentVersionSnapshotSchema = z.object({
   version: z.number().int().positive(),
   systemPrompt: z.string(),
   modelProfileId: z.string().uuid(),
-  config: z.record(z.any()),
+  config: z.record(z.any()).default({}),
   allowedTools: z.array(ToolDescriptorSchema),
 });
 export type AgentVersionSnapshot = z.infer<typeof AgentVersionSnapshotSchema>;
@@ -36,7 +36,7 @@ export const ExecutionContextSchema = z.object({
   stepId: z.string().uuid().optional(),
   correlationId: z.string().optional(),
   /** Extra context injected into messages (e.g. task goal) */
-  taskContext: z.string().optional(),
+  taskContext: z.string().optional().default(''),
 });
 export type ExecutionContext = z.infer<typeof ExecutionContextSchema>;
 

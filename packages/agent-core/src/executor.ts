@@ -1,6 +1,6 @@
 // src/executor.ts - Agent executor: composes prompt, calls gateway, persists lifecycle
 import { randomUUID } from 'node:crypto';
-import type { LiteLLMGateway } from '@aacc/llm';
+import { LiteLLMGateway } from '@aacc/llm';
 import type {
   AgentVersionSnapshot,
   AgentInput,
